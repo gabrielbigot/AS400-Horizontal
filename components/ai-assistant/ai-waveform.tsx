@@ -45,7 +45,7 @@ export function AIWaveform({
   bars = 40
 }: WaveformProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const animationRef = useRef<number>()
+  const animationRef = useRef<number | undefined>(undefined)
   const heightsRef = useRef<number[]>(Array(bars).fill(0))
   const [computedColor, setComputedColor] = useState<string>('#000000')
 
