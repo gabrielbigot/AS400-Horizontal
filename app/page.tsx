@@ -189,7 +189,9 @@ export default function Home() {
           return (
             <section
               key={section.id}
-              ref={(el) => (sectionsRef.current[index] = el)}
+              ref={(el) => {
+                sectionsRef.current[index] = el
+              }}
               className="flex-none w-screen h-screen overflow-y-auto"
               id={section.id}
             >
