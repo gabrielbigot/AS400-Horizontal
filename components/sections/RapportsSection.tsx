@@ -395,7 +395,7 @@ export function RapportsSection({ isActive }: RapportsSectionProps) {
 
     const finalY = (doc as any).lastAutoTable.finalY + 10
     doc.setFontSize(10)
-    doc.setFont(undefined, 'bold')
+    doc.setFont('helvetica', 'bold')
     doc.text(`Total Débit: ${formatCurrency(totalDebit)}`, 14, finalY)
     doc.text(`Total Crédit: ${formatCurrency(totalCredit)}`, 14, finalY + 7)
     doc.text(`Différence: ${formatCurrency(totalDebit - totalCredit)}`, 14, finalY + 14)
@@ -433,7 +433,7 @@ export function RapportsSection({ isActive }: RapportsSectionProps) {
 
       // Account header
       doc.setFontSize(12)
-      doc.setFont(undefined, 'bold')
+      doc.setFont('helvetica', 'bold')
       doc.text(`${account.numero} - ${account.intitule}`, 14, currentY)
       currentY += 7
 
@@ -470,7 +470,7 @@ export function RapportsSection({ isActive }: RapportsSectionProps) {
 
       // Account totals
       doc.setFontSize(9)
-      doc.setFont(undefined, 'bold')
+      doc.setFont('helvetica', 'bold')
       doc.text(
         `Total: Débit ${formatCurrency(account.debitTotal)} | Crédit ${formatCurrency(
           account.creditTotal
