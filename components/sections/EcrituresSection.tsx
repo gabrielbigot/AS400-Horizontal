@@ -214,7 +214,7 @@ export function EcrituresSection({ isActive }: EcrituresSectionProps) {
           <h1 className="text-5xl lg:text-7xl font-light tracking-tight">
             Saisie
             <br />
-            <span className="text-muted-foreground">d'Écritures</span>
+            <span className="text-muted-foreground">d&apos;Écritures</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl">
             Enregistrez vos opérations comptables en respectant le principe de la

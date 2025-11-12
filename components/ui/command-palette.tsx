@@ -220,7 +220,7 @@ export function CommandPalette({ sections, onNavigateToSection }: CommandPalette
           <div className="max-h-[400px] overflow-y-auto p-2">
             {Object.keys(groupedCommands).length === 0 ? (
               <div className="p-8 text-center text-muted-foreground">
-                Aucun résultat trouvé pour "{search}"
+                Aucun résultat trouvé pour &quot;{search}&quot;
               </div>
             ) : (
               Object.entries(groupedCommands).map(([section, items]) => (

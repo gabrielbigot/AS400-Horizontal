@@ -249,7 +249,7 @@ export function JournauxSection({ isActive }: JournauxSectionProps) {
             <span className="text-muted-foreground">Comptables</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl">
-            Les journaux regroupent vos écritures par nature d'opération.
+            Les journaux regroupent vos écritures par nature d&apos;opération.
           </p>
         </header>
 

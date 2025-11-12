@@ -278,7 +278,7 @@ export function DashboardSection({ isActive }: DashboardSectionProps) {
             <span className="text-muted-foreground">Bord</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl">
-            Vue d'ensemble de votre comptabilité en temps réel. Suivez vos indicateurs financiers et l'activité de votre club.
+            Vue d&apos;ensemble de votre comptabilité en temps réel. Suivez vos indicateurs financiers et l&apos;activité de votre club.
           </p>
         </header>
 
