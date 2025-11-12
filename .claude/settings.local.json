@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__upstash-context-7-mcp__resolve-library-id",
+      "Bash(tree:*)",
+      "Bash(find:*)",
+      "mcp__upstash-context-7-mcp__get-library-docs",
+      "Bash(npm install:*)",
+      "Bash(cat:*)",
+      "Bash(node server_thesys.js:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
