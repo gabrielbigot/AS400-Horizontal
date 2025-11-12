@@ -140,16 +140,16 @@ function Scene({
   const targetColor2Ref = useRef(new THREE.Color(colors[1]))
   const animSpeedRef = useRef(0.1)
   const perlinNoiseTexture = useTexture(
-    "https://storage.googleapis.com/eleven-public-cdn/images/perlin-noise.png",
-    (texture) => {
-      // Texture loaded successfully
-      texture.wrapS = THREE.RepeatWrapping
-      texture.wrapT = THREE.RepeatWrapping
-    },
-    (error) => {
-      console.error("Failed to load Perlin noise texture:", error)
-    }
+    "https://storage.googleapis.com/eleven-public-cdn/images/perlin-noise.png"
   )
+
+  // Configure texture wrapping after it's loaded
+  useEffect(() => {
+    if (perlinNoiseTexture) {
+      perlinNoiseTexture.wrapS = THREE.RepeatWrapping
+      perlinNoiseTexture.wrapT = THREE.RepeatWrapping
+    }
+  }, [perlinNoiseTexture])
 
   const agentRef = useRef<AgentState>(agentState)
   const modeRef = useRef<"auto" | "manual">(volumeMode)
