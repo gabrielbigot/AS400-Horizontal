@@ -1,0 +1,22 @@
+{
+  "name": "as400-ai-backend",
+  "version": "1.0.0",
+  "description": "Backend IA avec Claude pour AS400 Comptabilité",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node --watch server.js",
+    "start": "node server.js",
+    "test": "node test-agent.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "@crayonai/stream": "^0.6.4",
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "@supabase/supabase-js": "^2.45.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "openai": "^6.8.1"
+  }
+}
