@@ -137,6 +137,8 @@ export function AIAssistant() {
     </>
   )
 
+  const hasMessages = messages.length > 0
+
   return (
     <>
       <div className="space-y-12 relative">
@@ -154,10 +156,21 @@ export function AIAssistant() {
               </div>
             )}
           </div>
-          <p className="text-xs text-muted-foreground">
-            Appuyez sur <kbd className="px-2 py-1 text-xs bg-muted rounded">Espace</kbd> pour ouvrir le chat
-          </p>
+          {hasMessages && (
+            <p className="text-xs text-muted-foreground">
+              Appuyez sur <kbd className="px-2 py-1 text-xs bg-muted rounded">Espace</kbd> pour ouvrir le chat
+            </p>
+          )}
         </div>
+
+        {/* Message centré et agrandi quand aucun message */}
+        {!hasMessages && (
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <p className="text-2xl lg:text-3xl text-muted-foreground text-center">
+              Appuyez sur <kbd className="px-4 py-2 text-lg lg:text-xl bg-muted rounded mx-2">Espace</kbd> pour ouvrir le chat
+            </p>
+          </div>
+        )}
 
         {/* Chat messages - naturally flowing */}
       <AIChat
