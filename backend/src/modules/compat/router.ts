@@ -125,7 +125,7 @@ compatRouter.get('/entries', async (req: Request, res: Response) => {
 compatRouter.post('/entries', async (req: Request, res: Response) => {
   try {
     const entries = Array.isArray(req.body) ? req.body : [req.body];
-    const validated = entries.map(entry => JournalEntrySchema.parse(entry));
+    const validated = entries.map((entry: unknown) => JournalEntrySchema.parse(entry));
 
     const { data, error } = await supabase
       .from('journal_entries')
