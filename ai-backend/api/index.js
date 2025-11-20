@@ -1,15 +1,10 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import Anthropic from '@anthropic-ai/sdk';
 import OpenAI from 'openai';
 import { createClient } from '@supabase/supabase-js';
 
-// Load environment variables
-dotenv.config();
-
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 // Initialize AI clients
 const useThesys = !!process.env.THESYS_API_KEY;
@@ -23,8 +18,6 @@ const anthropicClient = !useThesys ? new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 }) : null;
 
-console.log(`🤖 Using ${useThesys ? 'Thesys C1 (Generative UI)' : 'Anthropic Claude (Text)'}`);
-
 // Initialize Supabase client
 const supabase = createClient(
   process.env.SUPABASE_URL,
@@ -32,26 +25,8 @@ const supabase = createClient(
 );
 
 // Middleware
-const defaultOrigins = ['http://localhost:3000', 'http://localhost:3001'];
-const envOrigins = process.env.ALLOWED_ORIGINS
-  ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
-  : [];
-const allowedOrigins = [...defaultOrigins, ...envOrigins];
-
 app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps, curl, etc.)
-    if (!origin) {
-      return callback(null, true);
-    }
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-
-    console.warn(`🚫 CORS blocked origin: ${origin}`);
-    return callback(new Error('Not allowed by CORS'));
-  },
+  origin: true, // Allow all origins in Vercel
   credentials: true
 }));
 app.use(express.json({ limit: '10mb' }));
@@ -248,11 +223,9 @@ async function executeQueryDatabase(input) {
   try {
     let query = supabase.from(input.table).select(input.select || '*');
 
-    // Apply filters
     if (input.filters) {
       for (const [key, value] of Object.entries(input.filters)) {
         if (typeof value === 'object' && value !== null) {
-          // Handle complex filters like { like: "411%" }
           const [operator, filterValue] = Object.entries(value)[0];
           query = query[operator](key, filterValue);
         } else {
@@ -261,13 +234,11 @@ async function executeQueryDatabase(input) {
       }
     }
 
-    // Apply ordering
     if (input.order) {
       const [column, direction] = input.order.split('.');
       query = query.order(column, { ascending: direction !== 'desc' });
     }
 
-    // Apply limit
     if (input.limit) {
       query = query.limit(input.limit);
     }
@@ -340,7 +311,6 @@ async function executeDetectAnomalies(input) {
     const anomalies = [];
     const checkTypes = input.check_types || ['unbalanced_batches', 'duplicate_entries', 'unusual_amounts', 'missing_lettrage', 'old_drafts'];
 
-    // Check 1: Unbalanced batches
     if (checkTypes.includes('unbalanced_batches')) {
       let query = supabase
         .from('journal_entries')
@@ -381,7 +351,6 @@ async function executeDetectAnomalies(input) {
       });
     }
 
-    // Check 2: Old drafts (> 30 days)
     if (checkTypes.includes('old_drafts')) {
       const thirtyDaysAgo = new Date();
       thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -412,7 +381,6 @@ async function executeDetectAnomalies(input) {
       }
     }
 
-    // Check 3: Missing lettrage (accounts 411xxx and 401xxx)
     if (checkTypes.includes('missing_lettrage')) {
       let query = supabase
         .from('journal_entries')
@@ -442,7 +410,6 @@ async function executeDetectAnomalies(input) {
       }
     }
 
-    // Check 4: Unusual amounts (> 10,000)
     if (checkTypes.includes('unusual_amounts')) {
       let query = supabase
         .from('journal_entries')
@@ -490,7 +457,6 @@ async function executeDetectAnomalies(input) {
   }
 }
 
-// Execute tool based on name
 async function executeTool(toolName, toolInput) {
   console.log(`🔧 Executing tool: ${toolName}`);
 
@@ -568,22 +534,18 @@ async function handleThesysChat(messages, user_id, company_id) {
     const choice = response.choices[0];
     const message = choice.message;
 
-    // Check if the model wants to call tools
     if (choice.finish_reason === 'tool_calls' && message.tool_calls) {
       iterations++;
       console.log(`[Iteration ${iterations}] Tool calls requested: ${message.tool_calls.length}`);
 
-      // Add assistant message with tool calls
       currentMessages.push(message);
 
-      // Execute each tool call
       for (const toolCall of message.tool_calls) {
         const toolName = toolCall.function.name;
         const toolInput = JSON.parse(toolCall.function.arguments);
 
         const toolResult = await executeTool(toolName, toolInput);
 
-        // Add tool result message
         currentMessages.push({
           role: 'tool',
           tool_call_id: toolCall.id,
@@ -591,11 +553,9 @@ async function handleThesysChat(messages, user_id, company_id) {
         });
       }
 
-      // Continue the loop to get the next response
       continue;
     }
 
-    // No more tool calls, return the final message
     return {
       success: true,
       message: message.content || 'Désolé, je n\'ai pas pu générer de réponse.',
@@ -605,7 +565,6 @@ async function handleThesysChat(messages, user_id, company_id) {
     };
   }
 
-  // Max iterations reached
   return {
     success: false,
     message: 'Nombre maximum d\'itérations atteint.',
@@ -637,7 +596,6 @@ async function handleAnthropicChat(messages, user_id, company_id) {
   let iterations = 0;
   const maxIterations = 10;
 
-  // Handle tool use loop
   while (response.stop_reason === 'tool_use' && iterations < maxIterations) {
     iterations++;
 
@@ -646,10 +604,8 @@ async function handleAnthropicChat(messages, user_id, company_id) {
 
     console.log(`[Iteration ${iterations}] Tool: ${toolUseBlock.name}`);
 
-    // Execute the tool
     const toolResult = await executeTool(toolUseBlock.name, toolUseBlock.input);
 
-    // Continue conversation with tool result
     anthropicMessages.push({
       role: 'assistant',
       content: response.content
@@ -675,7 +631,6 @@ async function handleAnthropicChat(messages, user_id, company_id) {
     });
   }
 
-  // Extract final text response
   const textBlock = response.content.find(block => block.type === 'text');
   const finalMessage = textBlock ? textBlock.text : 'Désolé, je n\'ai pas pu générer de réponse.';
 
@@ -721,20 +676,11 @@ app.post('/api/chat', async (req, res) => {
   }
 });
 
-// ==============================================================================
-// START SERVER
-// ==============================================================================
+// Export Vercel serverless function
+export default function handler(req, res) {
+  return app(req, res);
+}
 
-app.listen(PORT, () => {
-  console.log(`🚀 ========================================`);
-  console.log(`🤖 AI Backend server running`);
-  console.log(`📍 Port: ${PORT}`);
-  console.log(`🌐 URL: http://localhost:${PORT}`);
-  console.log(`📊 Health check: http://localhost:${PORT}/api/health`);
-  console.log(`💬 Chat endpoint: POST http://localhost:${PORT}/api/chat`);
-  console.log(`🔧 Environment: ${process.env.NODE_ENV || 'development'}`);
-  console.log(`✨ Mode: ${useThesys ? 'Thesys C1 (Generative UI) 🎨' : 'Anthropic Claude (Text) 📝'}`);
-  console.log(`🛠️  Tools: query_database, analyze_account_balance, detect_anomalies`);
-  console.log(`🗄️  Database: Supabase connected`);
-  console.log(`========================================`);
-});
+
+
+
