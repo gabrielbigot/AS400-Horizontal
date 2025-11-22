@@ -265,19 +265,19 @@ export function DashboardSection({ isActive }: DashboardSectionProps) {
   }
 
   return (
-    <div className={`min-h-screen p-8 lg:p-16 ${mounted ? "animate-fade-in-up" : "opacity-0"}`}>
-      <div className="max-w-7xl mx-auto space-y-12">
+    <div className={`min-h-screen p-4 sm:p-8 lg:p-16 pb-24 sm:pb-32 ${mounted ? "animate-fade-in-up" : "opacity-0"}`}>
+      <div className="max-w-7xl mx-auto space-y-8 sm:space-y-12">
         {/* Header */}
-        <header className="space-y-4">
-          <div className="text-sm text-muted-foreground font-mono tracking-wider">
+        <header className="space-y-3 sm:space-y-4">
+          <div className="text-xs sm:text-sm text-muted-foreground font-mono tracking-wider">
             COMPTABILITÉ / TAC HOCKEY
           </div>
-          <h1 className="text-5xl lg:text-7xl font-light tracking-tight">
+          <h1 className="text-4xl sm:text-5xl lg:text-7xl font-light tracking-tight">
             Tableau de
             <br />
             <span className="text-muted-foreground">Bord</span>
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl">
+          <p className="text-base sm:text-lg text-muted-foreground max-w-2xl">
             Vue d&apos;ensemble de votre comptabilité en temps réel. Suivez vos indicateurs financiers et l&apos;activité de votre club.
           </p>
         </header>
@@ -287,18 +287,18 @@ export function DashboardSection({ isActive }: DashboardSectionProps) {
         ) : (
           <>
         {/* Indicateurs financiers principaux */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="glass p-6 rounded-lg space-y-2 hover:border-muted-foreground/50 transition-all duration-300">
-            <div className="text-sm text-muted-foreground font-mono">TRÉSORERIE</div>
-            <div className={`text-3xl font-light ${dashboardData.tresorerie >= 0 ? "text-green-500" : "text-red-500"}`}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="glass p-5 sm:p-6 rounded-lg space-y-2 hover:border-muted-foreground/50 transition-all duration-300">
+            <div className="text-xs sm:text-sm text-muted-foreground font-mono">TRÉSORERIE</div>
+            <div className={`text-2xl sm:text-3xl font-light ${dashboardData.tresorerie >= 0 ? "text-green-500" : "text-red-500"}`}>
               {formatCurrency(dashboardData.tresorerie)}
             </div>
             <div className="text-xs text-muted-foreground">Banque + Caisse</div>
           </div>
 
-          <div className="glass p-6 rounded-lg space-y-2 hover:border-muted-foreground/50 transition-all duration-300">
-            <div className="text-sm text-muted-foreground font-mono">RÉSULTAT</div>
-            <div className={`text-3xl font-light ${dashboardData.resultat >= 0 ? "text-green-500" : "text-red-500"}`}>
+          <div className="glass p-5 sm:p-6 rounded-lg space-y-2 hover:border-muted-foreground/50 transition-all duration-300">
+            <div className="text-xs sm:text-sm text-muted-foreground font-mono">RÉSULTAT</div>
+            <div className={`text-2xl sm:text-3xl font-light ${dashboardData.resultat >= 0 ? "text-green-500" : "text-red-500"}`}>
               {formatCurrency(dashboardData.resultat)}
             </div>
             <div className="text-xs text-muted-foreground">
@@ -306,17 +306,17 @@ export function DashboardSection({ isActive }: DashboardSectionProps) {
             </div>
           </div>
 
-          <div className="glass p-6 rounded-lg space-y-2 hover:border-muted-foreground/50 transition-all duration-300">
-            <div className="text-sm text-muted-foreground font-mono">PRODUITS</div>
-            <div className="text-3xl font-light text-green-500">
+          <div className="glass p-5 sm:p-6 rounded-lg space-y-2 hover:border-muted-foreground/50 transition-all duration-300">
+            <div className="text-xs sm:text-sm text-muted-foreground font-mono">PRODUITS</div>
+            <div className="text-2xl sm:text-3xl font-light text-green-500">
               {formatCurrency(dashboardData.produits)}
             </div>
             <div className="text-xs text-muted-foreground">Total exercice</div>
           </div>
 
-          <div className="glass p-6 rounded-lg space-y-2 hover:border-muted-foreground/50 transition-all duration-300">
-            <div className="text-sm text-muted-foreground font-mono">CHARGES</div>
-            <div className="text-3xl font-light text-red-500">
+          <div className="glass p-5 sm:p-6 rounded-lg space-y-2 hover:border-muted-foreground/50 transition-all duration-300">
+            <div className="text-xs sm:text-sm text-muted-foreground font-mono">CHARGES</div>
+            <div className="text-2xl sm:text-3xl font-light text-red-500">
               {formatCurrency(dashboardData.charges)}
             </div>
             <div className="text-xs text-muted-foreground">Total exercice</div>
@@ -324,12 +324,12 @@ export function DashboardSection({ isActive }: DashboardSectionProps) {
         </div>
 
         {/* Visualisations */}
-        <div className="space-y-6">
-          <h2 className="text-2xl font-light">Évolutions & Analyses</h2>
+        <div className="space-y-4 sm:space-y-6">
+          <h2 className="text-xl sm:text-2xl font-light">Évolutions & Analyses</h2>
 
           {/* Revenue/Expenses Evolution Chart */}
-          <div className="glass p-6 rounded-lg space-y-4">
-            <h3 className="text-lg font-light">Évolution sur 6 mois</h3>
+          <div className="glass p-5 sm:p-6 rounded-lg space-y-4">
+            <h3 className="text-base sm:text-lg font-light">Évolution sur 6 mois</h3>
             <ResponsiveContainer width="100%" height={300}>
               <LineChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />

@@ -135,7 +135,7 @@ export default function Home() {
   )
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-background">
+    <div className="relative w-screen h-screen overflow-hidden bg-background touch-none">
       {/* Command Palette (Ctrl+K) */}
       <CommandPalette
         sections={sections.map((s) => s.label)}
@@ -168,9 +168,9 @@ export default function Home() {
       </nav>
 
       {/* Indicateur de section (mobile) */}
-      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 lg:hidden">
-        <div className="glass px-4 py-2 rounded-full">
-          <span className="text-xs font-mono text-muted-foreground">
+      <div className="fixed top-safe-or-4 left-1/2 -translate-x-1/2 z-50 lg:hidden" style={{ top: 'max(env(safe-area-inset-top), 1rem)' }}>
+        <div className="glass px-5 py-3 rounded-full shadow-lg">
+          <span className="text-sm font-medium text-foreground">
             {sections[activeSection].label}
           </span>
         </div>
@@ -192,8 +192,12 @@ export default function Home() {
               ref={(el) => {
                 sectionsRef.current[index] = el
               }}
-              className="flex-none w-screen h-screen overflow-y-auto"
+              className="flex-none w-screen h-screen overflow-y-auto touch-auto"
               id={section.id}
+              style={{
+                paddingTop: 'max(env(safe-area-inset-top), 0px)',
+                paddingBottom: 'max(env(safe-area-inset-bottom), 0px)',
+              }}
             >
               <SectionComponent isActive={activeSection === index} />
             </section>
@@ -202,14 +206,18 @@ export default function Home() {
       </div>
 
       {/* Navigation fléchée (mobile) */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 flex gap-4 lg:hidden">
+      <div
+        className="fixed left-1/2 -translate-x-1/2 z-50 flex gap-5 lg:hidden"
+        style={{ bottom: 'max(env(safe-area-inset-bottom, 2rem), 2rem)' }}
+      >
         <button
           onClick={() => activeSection > 0 && navigateToSection(activeSection - 1)}
           disabled={activeSection === 0}
-          className="glass p-3 rounded-full disabled:opacity-30 disabled:cursor-not-allowed"
+          className="glass p-4 rounded-full disabled:opacity-30 disabled:cursor-not-allowed shadow-lg active:scale-95 transition-all min-w-[60px] min-h-[60px] flex items-center justify-center"
+          aria-label="Section précédente"
         >
           <svg
-            className="w-6 h-6"
+            className="w-7 h-7"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -217,7 +225,7 @@ export default function Home() {
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth={2}
+              strokeWidth={2.5}
               d="M15 19l-7-7 7-7"
             />
           </svg>
@@ -228,10 +236,11 @@ export default function Home() {
             navigateToSection(activeSection + 1)
           }
           disabled={activeSection === sections.length - 1}
-          className="glass p-3 rounded-full disabled:opacity-30 disabled:cursor-not-allowed"
+          className="glass p-4 rounded-full disabled:opacity-30 disabled:cursor-not-allowed shadow-lg active:scale-95 transition-all min-w-[60px] min-h-[60px] flex items-center justify-center"
+          aria-label="Section suivante"
         >
           <svg
-            className="w-6 h-6"
+            className="w-7 h-7"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -239,7 +248,7 @@ export default function Home() {
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
-              strokeWidth={2}
+              strokeWidth={2.5}
               d="M9 5l7 7-7 7"
             />
           </svg>
